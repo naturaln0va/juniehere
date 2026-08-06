@@ -7,6 +7,7 @@
   <meta name="description" content="Has Junie been born yet? Find out here.">
   <meta property="og:title" content="Is Junie here yet?">
   <meta property="og:description" content="Has Junie been born yet? Find out here.">
+  <link id="favicon" rel="icon" href="">
   <style>
     * {
       margin: 0;
@@ -108,6 +109,14 @@
     answer.textContent = here ? "YES!" : "No";
     answer.className = here ? "yes" : "no";
     document.body.className = here ? "yes" : "no";
+
+    // Emoji favicon: hourglass while waiting, baby once she's here.
+    const emojiIcon = (emoji) =>
+      "data:image/svg+xml," +
+      encodeURIComponent(
+        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${emoji}</text></svg>`
+      );
+    document.getElementById("favicon").href = emojiIcon(here ? "👶" : "⏳");
     if (here) {
       document.getElementById("detail").textContent =
         BIRTH_DETAIL || "She's finally here! 🎉";
