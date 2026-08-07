@@ -13,6 +13,26 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link id="favicon" rel="icon" href="">
   <style>
+    :root {
+      --bg: #fdf6f0;
+      --fg: #2d2a26;
+      /* Muted black & white scheme while the answer is still "No" */
+      --bg-no: #efefef;
+      --fg-no: #000;
+      --answer-no: #1a1c21;
+      --answer-yes: #3d9960;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1a18;
+        --fg: #f5efe9;
+        --bg-no: #222;
+        --fg-no: #efefef;
+        --answer-no: #e4e6eb;
+      }
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -30,29 +50,14 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      background: #fdf6f0;
-      color: #2d2a26;
+      background: var(--bg);
+      color: var(--fg);
       padding: 1rem;
     }
 
-    @media (prefers-color-scheme: dark) {
-      body {
-        background: #1c1a18;
-        color: #f5efe9;
-      }
-    }
-
-    /* Muted black & white scheme while the answer is still "No" */
     body.no {
-      background: #efefef;
-      color: #000;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body.no {
-        background: #000;
-        color: #efefef;
-      }
+      background: var(--bg-no);
+      color: var(--fg-no);
     }
 
     h1 {
@@ -69,8 +74,8 @@
       letter-spacing: -0.02em;
     }
 
-    #answer.no  { color: #1A1C21; }
-    #answer.yes { color: #3d9960; }
+    #answer.no  { color: var(--answer-no); }
+    #answer.yes { color: var(--answer-yes); }
 
     #detail {
       font-size: clamp(1rem, 3vw, 1.5rem);
