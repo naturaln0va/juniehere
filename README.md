@@ -1,82 +1,50 @@
 # isjuniehereyet.com
 
-A one-page site that answers the only question that matters: **Is Junie here yet?**
+A one-page site that answers the only question anyone is asking right now:
 
-## Flipping it to YES 🎉
+> **Is Junie here yet?**
 
-Open `index.html` and find this block near the top of `<body>`:
+It renders a single enormous word — **No** while we wait, **YES!** once she
+arrives — and nothing else. No nav, no scroll, no cookie banner. You load it,
+you get your answer, you close the tab.
 
-```js
-const JUNIE_IS_HERE = false;
-const BIRTH_DETAIL = ""; // e.g. "Born August 14, 2026 · 7 lb 4 oz"
-```
+## The idea
 
-1. Change `false` to `true`.
-2. Optionally fill in `BIRTH_DETAIL`.
-3. Commit and push — the site updates in about a minute.
+Every expectant parent knows the third-trimester group text: the same question,
+from a dozen people, several times a day. This is the answer, at a URL, so
+nobody has to ask and nobody has to reply.
 
-You can do this from your phone at the hospital: open the repo on github.com (or the GitHub mobile app), tap the pencil icon on `index.html`, edit the one line, and commit.
+That constraint drove everything:
 
-**Preview the YES state** without changing anything by visiting
-`isjuniehereyet.com/?preview=yes`.
+- **One question, one word.** The answer is the entire page, sized to fill the
+  screen. Readable across the room, on a phone, at a glance.
+- **The waiting is part of it.** While the answer is "No" the page is
+  deliberately drab — grey, muted, an hourglass ⏳ in the tab. When it flips,
+  the whole thing warms up, turns green, throws confetti, and the favicon
+  becomes a little angel 👼. The site should *feel* like the news.
+- **Flipping it has to be trivial.** The switch is one boolean in one file, so
+  it can be thrown one-handed from a hospital bed, from a phone, at 3am, by
+  someone who has not slept. No build step, no deploy pipeline, no laptop.
 
-## Analytics (PostHog)
+## Peeking
 
-The site counts page views and nothing else — no autocapture, no session
-recording, no person profiles. The config lives in the `<head>` of
-`index.html`. The `POSTHOG_KEY` there is the project's public **Project API
-key**, which is safe to commit — it can only write events, not read them.
+You can see the celebration early — confetti and all — without spoiling
+anything for anyone else:
 
-Visits show up in PostHog under **Web analytics**, or as `$pageview` events
-in the activity feed.
+**[isjuniehereyet.com/?preview=yes](https://isjuniehereyet.com/?preview=yes)**
 
-### The reverse proxy
+That's a URL parameter, visible only to you. The real answer stays whatever
+it actually is.
 
-Requests go to `n.isjuniehereyet.com` rather than `posthog.com` — a PostHog
-**managed reverse proxy**, which stops ad blockers from filtering out the
-visit counts. It serves both the library (`/static/array.js`) and the event
-endpoint from our own domain.
+## Under the hood
 
-That subdomain is a DNS `CNAME` pointing at PostHog's proxy
-(`…cf-prod-us-proxy.proxyhog.com`), alongside the GitHub Pages records
-below. **Don't delete it** — if it stops resolving, analytics quietly stop.
-The site itself keeps working either way; the loader is fire-and-forget.
+One file. `index.html` holds the markup, the styles, and the script, with no
+dependencies and no build — the whole site is a few kilobytes plus a couple of
+images. It's served straight off GitHub Pages.
 
-If you ever drop the proxy, set `POSTHOG_HOST` back to
-`https://us.i.posthog.com` and remove the `ui_host` line.
+The only thing it phones home about is a page view count, so we know roughly
+how many people are out there refreshing.
 
-### If you paste a fresh snippet from PostHog
+---
 
-PostHog's setup snippets configure a full-fat install — `defaults: '<date>'`
-turns on autocapture, pageleave, and web vitals. Pasting one over this block
-would replace "count the visits" with "record everything." Take the hosts
-out of their snippet, leave the opt-outs here alone.
-
-## Hosting (GitHub Pages, free)
-
-1. Create a GitHub repo (e.g. `juniehere`) and push these files:
-   ```sh
-   git init
-   git add .
-   git commit -m "Initial site"
-   git branch -M main
-   git remote add origin git@github.com:YOUR_USERNAME/juniehere.git
-   git push -u origin main
-   ```
-2. On GitHub: **Settings → Pages** → Source: *Deploy from a branch* → Branch: `main`, folder `/ (root)` → Save.
-3. Still under **Pages → Custom domain**, enter `isjuniehereyet.com` and save. (The `CNAME` file in this repo keeps that setting from being lost on future deploys.)
-4. Check **Enforce HTTPS** once the certificate is issued (can take a few minutes to an hour).
-
-## DNS setup (at your domain registrar)
-
-Add these records for `isjuniehereyet.com`:
-
-| Type  | Name | Value               |
-|-------|------|---------------------|
-| A     | @    | 185.199.108.153     |
-| A     | @    | 185.199.109.153     |
-| A     | @    | 185.199.110.153     |
-| A     | @    | 185.199.111.153     |
-| CNAME | www  | YOUR_USERNAME.github.io |
-
-DNS changes usually propagate within minutes but can take up to a day.
+*Setup, deployment, DNS, and analytics details live in `CLAUDE.md`.*
