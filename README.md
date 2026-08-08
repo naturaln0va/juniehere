@@ -20,6 +20,22 @@ You can do this from your phone at the hospital: open the repo on github.com (or
 **Preview the YES state** without changing anything by visiting
 `isjuniehereyet.com/?preview=yes`.
 
+## Analytics (PostHog)
+
+The site counts page views and nothing else — no autocapture, no session
+recording, no person profiles. The config lives in the `<head>` of
+`index.html`, pointed at PostHog US Cloud. The `POSTHOG_KEY` there is the
+project's public **Project API key**, which is safe to commit — it can only
+write events, not read them.
+
+To point the site at a different PostHog project, swap `POSTHOG_KEY`
+(Settings → Project → Project API key). For a project on PostHog EU, also
+swap `POSTHOG_HOST` and `POSTHOG_ASSETS` for the EU hosts noted in the
+comments there.
+
+Visits show up in PostHog under **Web analytics**, or as `$pageview` events
+in the activity feed.
+
 ## Hosting (GitHub Pages, free)
 
 1. Create a GitHub repo (e.g. `juniehere`) and push these files:
