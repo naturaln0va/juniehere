@@ -15,26 +15,31 @@
 
   <!-- ============================================================
        Analytics (PostHog) — page views only.
+       Traffic goes through the managed reverse proxy at
+       n.isjuniehereyet.com, which serves both the library and the
+       event endpoint, so ad blockers that filter posthog.com don't
+       eat our visit counts. That subdomain is a CNAME to PostHog —
+       if it ever stops resolving, analytics silently stop and the
+       page itself is unaffected.
+
        POSTHOG_KEY is the public Project API key; it's write-only, so
-       it's fine to have here in the open. To point at a different
-       project, swap it (PostHog → Settings → Project → Project API
-       key). For a project on PostHog EU, swap the two hosts as well.
+       it's fine to have here in the open.
        ============================================================ -->
   <script>
     (function () {
       const POSTHOG_KEY = "phc_kCgEMLsjft79tmhbzvYKMjRFMy5aJUMRYsFmYf3xRr8a";
-      const POSTHOG_HOST = "https://us.i.posthog.com";        // EU: https://eu.i.posthog.com
-      const POSTHOG_ASSETS = "https://us-assets.i.posthog.com"; // EU: https://eu-assets.i.posthog.com
+      const POSTHOG_HOST = "https://n.isjuniehereyet.com"; // managed reverse proxy
 
       // Not configured — skip quietly rather than erroring.
       if (!POSTHOG_KEY.startsWith("phc_")) return;
 
       const script = document.createElement("script");
-      script.src = POSTHOG_ASSETS + "/static/array.js";
+      script.src = POSTHOG_HOST + "/static/array.js";
       script.async = true;
       script.onload = function () {
         posthog.init(POSTHOG_KEY, {
           api_host: POSTHOG_HOST,
+          ui_host: "https://us.posthog.com", // so PostHog links point at the real app, not the proxy
           capture_pageview: true,      // the one thing we actually want
           autocapture: false,          // no click/input tracking
           capture_pageleave: false,    // no time-on-page events

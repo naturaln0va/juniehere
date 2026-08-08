@@ -24,17 +24,33 @@ You can do this from your phone at the hospital: open the repo on github.com (or
 
 The site counts page views and nothing else — no autocapture, no session
 recording, no person profiles. The config lives in the `<head>` of
-`index.html`, pointed at PostHog US Cloud. The `POSTHOG_KEY` there is the
-project's public **Project API key**, which is safe to commit — it can only
-write events, not read them.
-
-To point the site at a different PostHog project, swap `POSTHOG_KEY`
-(Settings → Project → Project API key). For a project on PostHog EU, also
-swap `POSTHOG_HOST` and `POSTHOG_ASSETS` for the EU hosts noted in the
-comments there.
+`index.html`. The `POSTHOG_KEY` there is the project's public **Project API
+key**, which is safe to commit — it can only write events, not read them.
 
 Visits show up in PostHog under **Web analytics**, or as `$pageview` events
 in the activity feed.
+
+### The reverse proxy
+
+Requests go to `n.isjuniehereyet.com` rather than `posthog.com` — a PostHog
+**managed reverse proxy**, which stops ad blockers from filtering out the
+visit counts. It serves both the library (`/static/array.js`) and the event
+endpoint from our own domain.
+
+That subdomain is a DNS `CNAME` pointing at PostHog's proxy
+(`…cf-prod-us-proxy.proxyhog.com`), alongside the GitHub Pages records
+below. **Don't delete it** — if it stops resolving, analytics quietly stop.
+The site itself keeps working either way; the loader is fire-and-forget.
+
+If you ever drop the proxy, set `POSTHOG_HOST` back to
+`https://us.i.posthog.com` and remove the `ui_host` line.
+
+### If you paste a fresh snippet from PostHog
+
+PostHog's setup snippets configure a full-fat install — `defaults: '<date>'`
+turns on autocapture, pageleave, and web vitals. Pasting one over this block
+would replace "count the visits" with "record everything." Take the hosts
+out of their snippet, leave the opt-outs here alone.
 
 ## Hosting (GitHub Pages, free)
 
